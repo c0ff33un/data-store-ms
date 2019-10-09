@@ -37,7 +37,7 @@ const GameType = new GraphQLObjectType({
   name: 'Game',
   fields: () => ({
     id:{type: GraphQLID},
-    grid:{type: GraphQLString},
+    seed:{type: GraphQLString},
     matches: {
       type: new GraphQLList(MatchType),
       resolve(parent,args){
@@ -149,25 +149,57 @@ const Mutation = new GraphQLObjectType({
         handle : {type: GraphQLString},
         email: {type: GraphQLString},
       },
+      async resolve(parent,args){
+        const user = await User.findById(args.id);
+
+        user.handle = args.handle != null ? args.handle : user.handle
+        user.email = args.email != null ? args.email : user.email
+
+        return user.save()
+      }
+    },
+    deleteUser:{
+      type: UserType,
+      args:{
+        id: {type:GraphQLID}
+      },
       resolve(parent,args){
-        let user = User.findById(args.id)
-
-        user.handle = args.handle
-        user.email = args.email
-
-        return User.update({id:args.id},user)
+        return User.findByIdAndDelete(args.id)
       }
     },
     addGame:{
       type: GameType,
       args:{
-        grid: {type: GraphQLString}
+        seed: {type: GraphQLString}
       },
       resolve(parent,args){
         let game = new Game({
-          grid: args.grid,
+          seed: args.seed,
         })
         return game.save()
+      }
+    },
+    updateGame:{
+      type: GameType,
+      args:{
+        id: {type: GraphQLID},
+        seed: {type: GraphQLString}
+      },
+      async resolve(parent,args){
+        const game = await Game.findById(args.id);
+
+        game.seed = args.seed != null ? args.seed : game.seed
+
+        return game.save()
+      }
+    },
+    deleteGame:{
+      type: GameType,
+      args:{
+        id: {type:GraphQLID}
+      },
+      resolve(parent,args){
+        return Game.findByIdAndDelete(args.id)
       }
     },
     addMessage:{
@@ -182,6 +214,31 @@ const Mutation = new GraphQLObjectType({
           msg: args.msg,
         })
         return message.save()
+      }
+    },
+    updateMessage:{
+      type: MessageType,
+      args:{
+        id: {type: GraphQLID},
+        type : {type: GraphQLString},
+        msg: {type: GraphQLString},
+      },
+      async resolve(parent,args){
+        const message = await Message.findById(args.id);
+
+        message.type = args.type != null ? args.type : message.type
+        message.msg = args.msg != null ? args.msg : message.msg
+
+        return message.save()
+      }
+    },
+    deleteMessage:{
+      type: MessageType,
+      args:{
+        id: {type:GraphQLID}
+      },
+      resolve(parent,args){
+        return Message.findByIdAndDelete(args.id)
       }
     },
     addMatch:{
@@ -199,8 +256,34 @@ const Mutation = new GraphQLObjectType({
         })
         return match.save()
       }
-    }
+    },
+    updateMatch:{
+      type: MatchType,
+      args:{
+        id: {type: GraphQLID},
+        user : {type: GraphQLString},
+        game: {type: GraphQLString},
+        winner: {type: GraphQLString},
+      },
+      async resolve(parent,args){
+        const match = await Match.findById(args.id);
 
+        match.user = args.user != null ? args.user : match.user
+        match.game = args.game != null ? args.game : match.game
+        match.winner = args.winner != null ? args.winner : match.winner
+
+        return match.save()
+      }
+    },
+    deleteMatch:{
+      type: MatchType,
+      args:{
+        id: {type:GraphQLID}
+      },
+      resolve(parent,args){
+        return Match.findByIdAndDelete(args.id)
+      }
+    },
   }
 })
 

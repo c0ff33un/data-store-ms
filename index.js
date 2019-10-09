@@ -12,7 +12,7 @@ app.use(cors());
 
 // connect to mlab database
 // make sure to replace my db string & creds with your own
-mongoose.connect('mongodb+srv://ms:sa2019ii@data-store-tjxlk.mongodb.net/test?retryWrites=true&w=majority')
+mongoose.connect('mongodb://localhost:27017/myapp')
 
 mongoose.connection.once('open', () => {
     console.log('conneted to database');
