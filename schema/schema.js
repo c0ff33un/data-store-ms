@@ -1,5 +1,4 @@
 const graphql = require('graphql')
-const _ = require('lodash')
 const User = require('../models/user') 
 const Match = require('../models/match') 
 const Game = require('../models/game')
@@ -60,9 +59,9 @@ const MatchType = new GraphQLObjectType({
   name: 'Match',
   fields: () => ({
     id:{type:GraphQLID},
-    user: {type:GraphQLID},
-    game: {type:GraphQLID},
-    winner: {type:GraphQLID},
+    user: {type:GraphQLString},
+    game: {type:GraphQLString},
+    winner: {type:GraphQLString},
   })
 })
 
@@ -103,7 +102,7 @@ const RootQuery = new GraphQLObjectType({
       }
     },
     msgs: {
-      type: MessageType,
+      type: new GraphQLList(MessageType),
       args: {type: {type: GraphQLString}},
       resolve(parent, args){
         return Message.find({type: args.type})
@@ -244,14 +243,14 @@ const Mutation = new GraphQLObjectType({
     addMatch:{
       type: MatchType,
       args:{
-        user: {type:GraphQLID},
-        game: {type:GraphQLID},
-        winner: {type:GraphQLID},
+        user: {type: GraphQLID},
+        game: {type: GraphQLID},
+        winner: {type: GraphQLID},
       },
       resolve(parent,args){
         let match = new Match({
-          user: args.type,
-          game: args.msg,
+          user: args.user,
+          game: args.game,
           winner: args.winner,
         })
         return match.save()

@@ -1,0 +1,136 @@
+#Test with: http://editor.swagger.io/
+
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservice for Data-Store
+  description: Javascript + GraphQL + MongoDB
+  license:
+    name: Software Architecture, 2019-II
+host: localhost:4000
+basePath: /data-store-ms
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /graphql:
+    post:
+      summary: Receives all the mutations
+      operationId: createUser
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: User Object
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      summary: Returns all the queries
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/Game'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  
+definitions:
+
+  # Users
+  User:
+    type: object
+    required:
+      - id
+      - handle
+      - email
+    properties:
+      id:
+        type: string
+      handle:
+        type: string
+      email:
+        type: string
+      matches:
+        type: array
+        items:
+          type: string
+      won:
+        type: array
+        items:
+          type: string
+
+  Game:
+    type: object
+    required:
+      - id
+      - seed
+    properties:
+      id:
+        type: string
+      seed:
+        type: string
+
+  Match:
+    type: object
+    required:
+      - id
+      - user
+      - game
+    properties:
+      id:
+        type: string
+      user:
+        type: string
+      game:
+        type: string
+      winner:
+        type: string
+      
+  Message:
+    type: object
+    required:
+      - id
+      - type
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+      msg:
+        type: string
+
+  
+# Errors
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
+      code:
+        type: number
+      description:
+        type: object

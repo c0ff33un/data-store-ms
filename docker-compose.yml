@@ -1,0 +1,16 @@
+version: '3'
+services:
+  data-store-ms:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: mongo
+  mongo:
+    image: mongo:4.2.0-bionic
+    ports:
+      - "27017:27017"
