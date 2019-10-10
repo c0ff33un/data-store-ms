@@ -8,12 +8,13 @@ const app = express()
 
 // allow cross-origin requests
 app.use(cors());
-let MONGO_URL = process.env.MONGO_URL
-mongoose.connect(`mongodb://${MONGO_URL}/myapp`,
-{
+
+const mongooseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true
-})
+};
+
+mongoose.connect(`mongodb://${process.env.MONGO_URL}/myapp`, mongooseOptions)
 
 mongoose.connection.once('open', () => {
     console.log('conneted to database');

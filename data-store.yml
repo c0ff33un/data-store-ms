@@ -8,7 +8,7 @@ info:
   license:
     name: Software Architecture, 2019-II
 host: localhost:4000
-basePath: /data-store-ms
+basePath: /
   - http
 consumes:
   - application/json
@@ -18,37 +18,35 @@ paths:
   /graphql:
     post:
       summary: Receives all the mutations
-      operationId: createUser
+      operationId: creation-update-delete
       parameters:
         - name: user
           in: body
           required: true
-          description: User Object
+          description: Mutation
           schema:
             $ref: '#/definitions/User'
       responses:
-        '201':
-          description: Created
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorModel'
+        '200':
+          description: OK
         '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorModel'
     get:
       summary: Returns all the queries
-      operationId: getAllUsers
+      operationId: read(query)
+      parameters:
+        - name: query
+          type: string
+          in: query
+          required: true
+          description: Query
       responses:
         '200':
-          description: Ok
+          description: OK
           schema:
             $ref: '#/definitions/Game'
-        '406':
-          description: Not Acceptable (Invalid Params)
-          schema:
-            $ref: '#/definitions/ErrorModel'
         '500':
           description: Internal Server Error
           schema:
@@ -134,3 +132,4 @@ definitions:
         type: number
       description:
         type: object
+
