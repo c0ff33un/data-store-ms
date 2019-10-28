@@ -5,7 +5,8 @@ const Game = require('../models/game')
 const Message = require('../models/message')
 
 const {GraphQLObjectType, 
-GraphQLString, 
+GraphQLString,
+GraphQLInt,  
 GraphQLSchema,
 GraphQLID,
 GraphQLList
@@ -15,8 +16,9 @@ const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id:{type: GraphQLID},
-    handle: {type: GraphQLString, },
+    handle: {type: GraphQLString},
     email:{type: GraphQLString},
+    authId: {type: GraphQLInt},
     matches: {  
       type: new GraphQLList(MatchType),
       resolve(parent,args){
@@ -130,6 +132,7 @@ const Mutation = new GraphQLObjectType({
     addUser:{
       type: UserType,
       args:{
+        authId: {type: GraphQLInt},
         handle : {type: GraphQLString},
         email: {type: GraphQLString},
       },
@@ -137,6 +140,7 @@ const Mutation = new GraphQLObjectType({
         let user = new User({
           handle: args.handle,
           email: args.email,
+          authId: args.authId,
         })
         return user.save()
       }
