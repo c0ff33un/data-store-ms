@@ -16,7 +16,7 @@ const mongooseOptions = {
   useUnifiedTopology: true
 };
 
-mongoose.connect(`mongodb://${process.env.MONGO_URL}/myapp`, mongooseOptions)
+mongoose.connect(`mongodb://${process.env.MONGO_URL}/myapp?replicaSet=${process.env.MONGO_RS}`, mongooseOptions)
 
 mongoose.connection.once('open', () => {
     console.log('conneted to database');
